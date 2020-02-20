@@ -21,15 +21,16 @@ int currentState = 1; // For dim and initial
    
 
 
-void setup() { 
+void setup() // Sets up the serial baud = 9600,pinMode is setup, interrupt, delay for LED before turning on. 
+{ 
     Serial.begin(9600);
-    delay(3000);
     pinMode(interruptBrakePressed, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(interruptPinR),brakePressedISR, CHANGE);
     FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);
 }
 
-void loop() {
+void loop() // Main
+{
 
     if(counter == 0) // Start Animation
     {
@@ -52,7 +53,7 @@ void loop() {
     
 }
 
-void brakePressedISR()
+void brakePressedISR() // Whenever the brake is pressed the light is set to 64 levels brightness gradually.
 {
     for(int i = 32; i >= 64; i++)
     {
@@ -64,7 +65,7 @@ void brakePressedISR()
 }
 
 
-void dimLEDS()
+void dimLEDS() // Reduces the brights to 32 levels with a transition.
 {
     Serial.println("dimLEDS");
     for(int i = 64; i >= 32; i--)
@@ -75,15 +76,10 @@ void dimLEDS()
       delay(50);
       
     }
-
-    delay(1000);
-    
-    
-    
 }
 
 
-void startUpLEDAnimation()
+void startUpLEDAnimation() // Turns on the lights sequentially
 {
   Serial.println("startUpLEDAnimation");
    
