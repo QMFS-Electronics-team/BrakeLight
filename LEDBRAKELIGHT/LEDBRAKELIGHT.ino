@@ -5,7 +5,7 @@
 
 #include "FastLED.h"
  
-#define NUM_LEDS 39
+#define NUM_LEDS 100
 #define DATA_PIN 5
 #define TWO_HUNDRED_PI 628
  
@@ -25,7 +25,7 @@ void setup() // Sets up the serial baud = 9600,pinMode is setup, interrupt, dela
 { 
     Serial.begin(9600);
     pinMode(interruptBrakePressed, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(interruptPinR),brakePressedISR, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(interruptBrakePressed),brakePressedISR, CHANGE);
     FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);
 }
 
