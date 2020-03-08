@@ -1,31 +1,36 @@
 // WS2812B - LED STRIP
-// Initial State OFF
-// IF NO SIGNAL LIGHT SHOULD BE DIM AT 10 LEVELS
-// IF THERE IS A SIGNAL LIGHT SHOULD BE AT 244 LEVEL.
 
+
+// Libraries
 #include "FastLED.h"
- 
+
+
+// Macros
 #define NUM_LEDS 100
 #define DATA_PIN 2
 #define TWO_HUNDRED_PI 628
- 
-CRGB leds[NUM_LEDS];
 
+
+
+// Global Variables
+CRGB leds[NUM_LEDS];            // Array to indicate LEDs in sequence
+bool debugMode = true;
 int interruptBrakePressed = 2;  // Interrupt
 int startupValue = 0;           // For the animation
 int element = 0;                // An element is an led defined by a sequential number
 int last_element = 0;           // The very last element initialised in the method
 
-
-void setup()  
+// Setup
+void setup()
 { 
-    Serial.begin(9600); // Sets up the serial baud = 9600
-    pinMode(interruptBrakePressed, INPUT_PULLUP); //pinMode is setup
-    attachInterrupt(digitalPinToInterrupt(interruptBrakePressed),brakePressedISR, CHANGE); //interrupt
-    FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);  //delay for LED before turning on. 
+    Serial.begin(9600);                                                                     // Sets up the serial baud = 9600
+    pinMode(interruptBrakePressed, INPUT_PULLUP);                                           //pinMode is setup
+    attachInterrupt(digitalPinToInterrupt(interruptBrakePressed),brakePressedISR, CHANGE);  //interrupt
+    FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);                                //delay for LED before turning on. 
 }
 
-void loop() // Main
+// Main
+void loop() 
 {
 
     if(startupValue == 0) // Start Animation
@@ -33,13 +38,13 @@ void loop() // Main
       startUpLEDAnimation(startupValue);
       counter ++; // Increment of counter will precent the animation from occurring again
     }
-
-    
     dimLEDS(); // Keep Light Dim
 }
 
-void brakePressedISR() // Whenever the brake is pressed the light is set to 64 levels brightness gradually.
+// Whenever the brake is pressed the light is set to 64 levels brightness gradually.
+void brakePressedISR() 
 {
+    deubg("Brake has been pressed")
     for(int i = 32; i >= 64; i++)
     {
       Serial.println(i);
@@ -49,26 +54,24 @@ void brakePressedISR() // Whenever the brake is pressed the light is set to 64 l
     }
 }
 
-
-void dimLEDS() // Reduces the brights to 32 levels with a transition.
+// Reduces the brights to 32 levels with a transition.
+void dimLEDS() 
 {
-    Serial.println("dimLEDS");
-    //for(int i = 64; i >= 32; i--)
+    debug("Diming LEDs")
     for(int i = 64; i >= 64; i--)
     {
       Serial.println(i);
       FastLED.setBrightness(i);
       FastLED.show();
       delay(50);
-      
     }
+    debug("Dimming Complete")
 }
 
-
-void startUpLEDAnimation(int startupValue) // Turns on the lights sequentially
+// Turns on the lights sequentially
+void startUpLEDAnimation(int startupValue) 
 {
-  Serial.println("startUpLEDAnimation");
-  
+  debug("Startup LED Animation")
   if(startupValue > 0)
   {
 
@@ -87,16 +90,17 @@ void startUpLEDAnimation(int startupValue) // Turns on the lights sequentially
         }
          
         last_element = element;
-      }
-
-    
+      }   
   }
-
-  Serial.println("endingstartUpLEDAnimation");
-
-  
+  debug("Startup LED Animation Complete")
 }  
 
 
-
-  
+void debug(String response)
+{
+  if(debugMode == true)
+  {
+     Serial.println("From Debug")
+     Serial.println(response)
+  }
+}
