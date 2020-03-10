@@ -6,7 +6,7 @@
 
 
 // Macros
-#define NUM_LEDS 100
+#define NUM_LEDS 45
 #define DATA_PIN 2
 #define TWO_HUNDRED_PI 628
 
@@ -32,19 +32,32 @@ void setup()
 // Main
 void loop() 
 {
+  leds[5].g = 32;
+  FastLED.show();
 
-    if(startupValue == 0) // Start Animation
+  /*
+  for(int i = 0; i < 54; i++)
+  {
+    
+    FastLED.show();
+  }
+  delay(10000);
+  */
+  /*
+    if(startupValue == 1) // Start Animation
     {
-      startUpLEDAnimation(startupValue);
-      counter ++; // Increment of counter will precent the animation from occurring again
+      startUpLEDAnimation(0);
+      startupValue ++; // Increment of counter will precent the animation from occurring again
     }
     dimLEDS(); // Keep Light Dim
+
+    */
 }
 
 // Whenever the brake is pressed the light is set to 64 levels brightness gradually.
 void brakePressedISR() 
 {
-    deubg("Brake has been pressed")
+    debug("Brake has been pressed");
     for(int i = 32; i >= 64; i++)
     {
       Serial.println(i);
@@ -57,7 +70,7 @@ void brakePressedISR()
 // Reduces the brights to 32 levels with a transition.
 void dimLEDS() 
 {
-    debug("Diming LEDs")
+    debug("Diming LEDs");
     for(int i = 64; i >= 64; i--)
     {
       Serial.println(i);
@@ -65,13 +78,13 @@ void dimLEDS()
       FastLED.show();
       delay(50);
     }
-    debug("Dimming Complete")
+    debug("Dimming Complete");
 }
 
 // Turns on the lights sequentially
 void startUpLEDAnimation(int startupValue) 
 {
-  debug("Startup LED Animation")
+  debug("Startup LED Animation");
   if(startupValue > 0)
   {
 
@@ -92,7 +105,7 @@ void startUpLEDAnimation(int startupValue)
         last_element = element;
       }   
   }
-  debug("Startup LED Animation Complete")
+  debug("Startup LED Animation Complete");
 }  
 
 
@@ -100,7 +113,7 @@ void debug(String response)
 {
   if(debugMode == true)
   {
-     Serial.println("From Debug")
-     Serial.println(response)
+     Serial.println("From Debug");
+     Serial.println(response);
   }
 }
