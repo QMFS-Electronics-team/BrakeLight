@@ -1,8 +1,0 @@
-This project is for the brake light system. 
-
-
-Basic information
-
-	- The brake light prototye code will be written
-	- Fuction for reading brake activation to make brake light brighter.
-	- Light should be on when the car is on when the car is on. (Dim)
