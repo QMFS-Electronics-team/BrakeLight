@@ -19,7 +19,7 @@
 CRGB leds[NUM_LEDS];            // Array to indicate LEDs in sequence
 
 bool debugMode = true;          // Debugging to the STDIO/Serial Monitor
-bool repeat = false;            // Light Testing
+bool repeat = true;            // Light Testing
 
 int brakeButton = 2;            // Interrupt
 
@@ -39,6 +39,7 @@ void setup()
     //attachInterrupt(digitalPinToInterrupt(brakeButton), brakeReleasedISR, FALLING);
     
     FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);                                //delay for LED before turning on. 
+//    setMaxRefreshRate(30, true);
     Serial.begin(9600);  // Sets up the serial baud = 9600
 }
 
@@ -126,9 +127,6 @@ void startUpLEDAnimation()
 }
 
 
-
-
-
 //_____________Debugging_____________
 
 // Outputs on the STDIO or Serial Monitor
@@ -141,6 +139,9 @@ void debug(String response)
   }
 }
 
+
+// Tests all LEDs brightness and their colours
+// Args: None
 void checkLightStatus()
 {
   brightnessTest();
@@ -149,6 +150,8 @@ void checkLightStatus()
 }
 
 
+// Tests The Colours
+// Args: None
 void colourTest()
 {
   delay(100);
@@ -199,7 +202,8 @@ void colourTest()
   delay(2000);
 }
 
-
+// Tests The Brightness
+// Args: None
 void brightnessTest()
 {
   // Brightness Check
