@@ -19,6 +19,7 @@
 CRGB leds[NUM_LEDS];            // Array to indicate LEDs in sequence
 
 bool debugMode = true;          // Debugging to the STDIO/Serial Monitor
+bool repeat = false;            // Light Testing
 
 int brakeButton = 2;            // Interrupt
 
@@ -43,7 +44,12 @@ void setup()
 
 //_____________Main_____________
 void loop() 
-{       
+{
+  if(debugMode and repeat)
+  {
+    checkLightStatus();
+    repeat = false;
+  }
  
   if(startupValue == true)
   {
@@ -107,19 +113,20 @@ void startUpLEDAnimation()
       {
         
         element = round((NUM_LEDS-1)/2*(sin(i/100.0)+1));
-        leds[element].g = 255;
         FastLED.show();
-        delay(1);
         if(element < last_element)
         {
-            leds[element].g = 0;
-            delay(100); // Start Up Delay
+            leds[element].g = 64;
+            delay(10); // Start Up Delay
             FastLED.show();
         }
         last_element = element;
       }   
       debug("Startup LED Animation Complete");  
 }
+
+
+
 
 
 //_____________Debugging_____________
@@ -132,4 +139,91 @@ void debug(String response)
   {
      Serial.println(response);
   }
+}
+
+void checkLightStatus()
+{
+  brightnessTest();
+  delay(1000);
+  colourTest();  
+}
+
+
+void colourTest()
+{
+  delay(100);
+  Serial.println("Colour Check");
+  
+  // Colour Check 
+
+  for(int colour = 0; colour < 255; colour++ )
+  {
+      for(int i = 0; i < NUM_LEDS; i++)
+      {
+        leds[i].b = colour; 
+      }
+      FastLED.show();
+      delay(TRANSITION_DIM);
+      
+  }
+  
+  for(int colour = 0; colour < 255; colour++ )
+  {
+      for(int i = 0; i < NUM_LEDS; i++)
+      {
+        leds[i].r = colour; 
+      }
+      FastLED.show();
+      delay(TRANSITION_DIM);
+      
+  }
+
+  for(int colour = 0; colour < 255; colour++ )
+  {
+      for(int i = 0; i < NUM_LEDS; i++)
+      {
+        leds[i].g = colour; 
+      }
+      FastLED.show();
+      delay(TRANSITION_DIM);
+      
+  }
+
+  Serial.println("Colour Test Complete");
+  delay(100);
+  Serial.println("Switching Off LEDs");
+  for(int i = 0; i < NUM_LEDS; i++)
+  {
+    leds[i] = CRGB::Black;
+  }
+  delay(2000);
+}
+
+
+void brightnessTest()
+{
+  // Brightness Check
+  delay(100);
+  // Lowest Brightness
+  FastLED.setBrightness(0);
+  FastLED.show();
+  
+  // Increment Brightness 
+
+  // Set Colour
+  for(int i = 0; i < NUM_LEDS; i++)
+  {
+    leds[i].r = 64;
+    leds[i].g = 64;
+    leds[i].b = 64;
+  }
+  // Alter Brightness
+  Serial.println("Brightness Test");
+  for(int i = 0; i < 255; i++) 
+  {
+    FastLED.setBrightness(i);
+    delay(TRANSITION_DIM);
+    FastLED.show();
+  }
+  delay(1000);
 }
