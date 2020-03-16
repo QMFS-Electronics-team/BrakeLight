@@ -8,7 +8,7 @@
 #include "FastLED.h"
 
 //_____________Macros_____________
-#define NUM_LEDS 100
+#define NUM_LEDS 45
 #define DATA_PIN 2
 #define TWO_HUNDRED_PI 628
 #define MIN_BRIGHTNESS 32
@@ -34,8 +34,8 @@ void setup()
     pinMode(brakeButton, INPUT_PULLUP);
     pinMode(brakeButton, INPUT_PULLUP);     //pinMode is setup
     
-    attachInterrupt(digitalPinToInterrupt(brakeButton),brakePressedISR, RISING);  //Interrupt
-    attachInterrupt(digitalPinToInterrupt(brakeButton), brakeReleasedISR, FALLING);
+    //attachInterrupt(digitalPinToInterrupt(brakeButton),brakePressedISR, RISING);  //Interrupt
+    //attachInterrupt(digitalPinToInterrupt(brakeButton), brakeReleasedISR, FALLING);
     
     FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);                                //delay for LED before turning on. 
     Serial.begin(9600);  // Sets up the serial baud = 9600
@@ -43,10 +43,11 @@ void setup()
 
 //_____________Main_____________
 void loop() 
-{  
+{       
+ 
   if(startupValue == true)
   {
-    startUpLEDAnimation(startupValue);
+    startUpLEDAnimation();
     startupValue = false;
   }
 
@@ -55,6 +56,7 @@ void loop()
     dimLEDS(dimState); // Keep Light Dim
     dimState = false;
   }
+  
 }
 
 
@@ -99,7 +101,7 @@ void dimLEDS(bool dimState)
 
 // Turns on the lights sequentially
 // Args: Boolean value for the state for the startup
-void startUpLEDAnimation(bool startupValue) 
+void startUpLEDAnimation() 
 {
       for(int i=0; i<TWO_HUNDRED_PI; i++)
       {
@@ -111,6 +113,7 @@ void startUpLEDAnimation(bool startupValue)
         if(element < last_element)
         {
             leds[element].g = 0;
+            delay(100); // Start Up Delay
             FastLED.show();
         }
         last_element = element;
